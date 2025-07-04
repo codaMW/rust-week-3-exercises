@@ -65,8 +65,7 @@ impl CompactSize {
                     return Err(BitcoinError::InsufficientBytes);
                 }
                 let val = u64::from_le_bytes([
-                    bytes[1], bytes[2], bytes[3], bytes[4],
-                    bytes[5], bytes[6], bytes[7], bytes[8],
+                    bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8],
                 ]);
                 Ok((Self::new(val), 9))
             }
@@ -128,9 +127,7 @@ impl OutPoint {
         }
         let mut txid = [0u8; 32];
         txid.copy_from_slice(&bytes[0..32]);
-        let vout = u32::from_le_bytes([
-            bytes[32], bytes[33], bytes[34], bytes[35]
-        ]);
+        let vout = u32::from_le_bytes([bytes[32], bytes[33], bytes[34], bytes[35]]);
         Ok((Self::new(txid, vout), 36))
     }
 }
@@ -268,7 +265,11 @@ impl fmt::Display for BitcoinTransaction {
         writeln!(f, "Lock Time: {}", self.lock_time)?;
         for (i, input) in self.inputs.iter().enumerate() {
             writeln!(f, "Input {}:", i)?;
-            writeln!(f, "  Previous Output Txid: {}", hex::encode(input.previous_output.txid.0))?;
+            writeln!(
+                f,
+                "  Previous Output Txid: {}",
+                hex::encode(input.previous_output.txid.0)
+            )?;
             writeln!(f, "  Previous Output Vout: {}", input.previous_output.vout)?;
             writeln!(
                 f,
@@ -281,4 +282,3 @@ impl fmt::Display for BitcoinTransaction {
         Ok(())
     }
 }
-
